@@ -1,23 +1,15 @@
 package com.example.googemapskotlin
 
 import android.Manifest
-import android.R
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
-import com.directions.route.AbstractRouting
-import com.directions.route.Route
-import com.directions.route.RouteException
-import com.directions.route.Routing
-import com.directions.route.RoutingListener
+import com.directions.route.*
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.*
@@ -26,10 +18,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
+import java.util.ArrayList
 
-class GoogleMapDirection : FragmentActivity(), OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
+class GMActivity : AppCompatActivity(), OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
     RoutingListener {
+
     lateinit var mMap: GoogleMap
     lateinit var myLocation: Location
     lateinit var destinationLocation: Location
@@ -38,16 +31,17 @@ class GoogleMapDirection : FragmentActivity(), OnMapReadyCallback, GoogleApiClie
     var locationPermission = false
     lateinit var polylines: MutableList<Polyline>
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.directions_layout)
+        setContentView(R.layout.activity_g_m)
 
-        //request location permission.
         requestPermision()
 
-        //map fragment to show map.
+       /* val  map_fragment:SupportMapFragment? = SupportMapFragment.newInstance(findViewById(R.id.map_fragment))
+        map_fragment?.getMapAsync(this)*/
+
         val mapFragment: SupportMapFragment? = supportFragmentManager
-            .findFragmentById(R.id.map_directions_fragment) as SupportMapFragment?
+            .findFragmentById(R.id.map_fragment) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
 
@@ -132,7 +126,7 @@ class GoogleMapDirection : FragmentActivity(), OnMapReadyCallback, GoogleApiClie
 
     //Routing call back functions.
     override fun onRoutingFailure(e: RouteException) {
-        val parentLayout = findViewById<View>(R.id.content)
+        val parentLayout = findViewById<View>(android.R.id.content)
         System.out.println("asdggfagshdfg+++" + e.toString())
         val snackbar: Snackbar = Snackbar.make(parentLayout, e.toString(), Snackbar.LENGTH_LONG)
         snackbar.show()
@@ -156,7 +150,7 @@ class GoogleMapDirection : FragmentActivity(), OnMapReadyCallback, GoogleApiClie
         //add route(s) to the map using polyline
         for (i in route.indices) {
             if (i == shortestRouteIndex) {
-                polyOptions.color(resources.getColor(R.color.background_dark))
+                polyOptions.color(resources.getColor(android.R.color.background_dark))
                 polyOptions.width(7F)
                 polyOptions.addAll(route[shortestRouteIndex].getPoints())
                 val polyline: Polyline = mMap!!.addPolyline(polyOptions)
@@ -181,7 +175,7 @@ class GoogleMapDirection : FragmentActivity(), OnMapReadyCallback, GoogleApiClie
         mMap.addMarker(endMarker)
     }
 
-    override fun onRoutingCancelled() {
+    override fun onRoutingCancelled(){
         Findroutes(start, end)
     }
 

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.diections_button_id).setOnClickListener{
 
-            val intent: Intent = Intent(applicationContext,GoogleMapDirection::class.java)
+            val intent: Intent = Intent(applicationContext,GMActivity::class.java)
             startActivity(intent)
         }
 
